@@ -29,7 +29,18 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        return "data is stored";
+        $request -> validate([
+            'name' => 'required|string|max:100',
+            'email' => 'required',
+            'password' => 'required'
+        ]);
+
+        User::create([
+            'name' => $request -> name,
+            'email' => $request -> email,
+            'password' => $request -> password
+        ]);
+        return redirect(route('users.index'));
     }
 
     /**
@@ -37,7 +48,7 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        $user = User::where('id', $id)->first();
+        $user = User::findOrFail($id);
         return view("users.show", ["user" => $user]);
     }
 
@@ -46,7 +57,7 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
-        $user = User::where('id', $id)->first();
+        $user = User::findOrFail($id);
         // dd($user);
         return view("users.edit", ["user" => $user]);
     }
@@ -56,7 +67,18 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        return "data updated";
+        $request -> validate([
+            'name' => 'required|string|max:100',
+            'email' => 'required',
+            'password' => 'required'
+        ]);
+
+        User::findOrFail($id) -> update([
+            'name' => $request -> name,
+            'email' => $request -> email,
+            'password' => $request -> password
+        ]);
+        return redirect(route('users.index'));
     }
 
     /**
@@ -64,6 +86,9 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        return "data deleted!";
+        $user - User::find($id);
+        $user->posts()->delete();
+        $user->delete();
+        return redirect(route('users.index'));
     }
 }

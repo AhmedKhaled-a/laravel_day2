@@ -13,14 +13,19 @@
     </tr>
     @foreach ($users as $user)
         <tr>
-            <td>{{ $user['id'] }}</td>
-            <td><a href="{{ route('users.show', ['id'=>$user['id']], false) }}">{{ $user['name'] }}</a></td>
-            <td>{{ $user['email'] }}</td>
+            <td>{{ $user -> id }}</td>
+            <td><a href="{{ route('users.show', ['id'=>$user['id']], false) }}">{{ $user -> name }}</a></td>
+            <td>{{ $user -> email }}</td>
             <td>
                 <a href="{{ route('users.edit', ['id'=>$user['id']], false) }}" class="btn btn-primary">Edit</a>
-                <a href="#" class="btn btn-danger">Delete</a>
+                <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="d-inline">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
             </td>
         </tr>
     @endforeach
 </table>
+<a href="{{route('users.create')}}" class="btn btn-dark">new user</a >
 @endsection
